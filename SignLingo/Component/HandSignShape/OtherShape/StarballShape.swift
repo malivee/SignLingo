@@ -10,9 +10,6 @@ import SwiftUI
 // MARK: not finished
 struct StarballShape: Shape {
     func path(in rect: CGRect) -> Path {
-        let w = rect.width / 127
-        let h = rect.height / 127
-        
         let center = CGPoint(
                     x: rect.midX,
                     y: rect.midY

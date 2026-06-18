@@ -8,16 +8,22 @@
 import SwiftUI
 
 struct CardTutorialView: View {
+    
+    var title: String
+    var subtitle: String
+    var icon: String
+    
+    
     var body: some View {
         ZStack {
             Rectangle()
                 .fill(.lightPurple.opacity(0.1))
                 .frame(maxWidth: .infinity)
                 .frame(height: 240)
-                .background(.ultraThickMaterial)
-                .background(.lightPurple.opacity(0.9))
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .glassEffect(.identity)
+                .glassEffect(in: .rect(cornerRadius: 16.0))
+                .background(.whitePurple)
+                .clipShape(RoundedRectangle(cornerRadius: 32))
+                .shadow(radius: 8, y: 5)
             
             VStack {
                 Spacer()
@@ -25,14 +31,17 @@ struct CardTutorialView: View {
                     Circle()
                         .fill(.whitePurple)
                         .frame(width: 80)
-                    HandFullHelper(fillShape: AShapeFill(), outlineShape: AShape(), lineWidth: 0.3)
+                    Image(systemName: icon)
+                        .tint(.whiteBackground)
+                        .font(.largeTitle)
+                    
                    
                 }
                 .padding(.bottom, 16)
                 
-                Text("Place phone")
+                Text(title)
                     .font(.body.bold())
-                Text("Lean it against a sturdy object at eye level.")
+                Text(subtitle)
                     .font(.callout.weight(.thin))
                 
                 Spacer()
@@ -46,5 +55,5 @@ struct CardTutorialView: View {
 }
 
 #Preview {
-    CardTutorialView()
+    CardTutorialView(title: "Place phone", subtitle: "Lean it against a sturdy object at the eye level", icon: "iphone")
 }

@@ -44,8 +44,8 @@ struct CardView: View {
                     
                     
                     Text("Start real-time detection and learn sign language!")
-                        .foregroundStyle(.whitePurple)
-                        .font(.body)
+                        .foregroundStyle(.white)
+                        .font(.body.weight(.light))
                     
                         .padding(.bottom, 16)
                     
