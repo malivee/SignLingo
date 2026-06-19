@@ -54,12 +54,11 @@ struct ContentView: View {
                 
                 VStack {
                     
-                    
-                    
                     CardView(isStartDetection: $isStartingDetection)
                         .padding(.horizontal, -16)
                         .navigationDestination(isPresented: $isStartingDetection, destination: {
-                            ResultView()
+                            CameraView()
+                                .ignoresSafeArea()
                         })
                     
                     VStack(alignment: .leading) {
