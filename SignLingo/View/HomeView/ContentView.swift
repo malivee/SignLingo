@@ -57,7 +57,7 @@ struct ContentView: View {
                     CardView(isStartDetection: $isStartingDetection)
                         .padding(.horizontal, -16)
                         .navigationDestination(isPresented: $isStartingDetection, destination: {
-                            CameraView()
+                            CameraFullView()
                                 .ignoresSafeArea()
                         })
                     

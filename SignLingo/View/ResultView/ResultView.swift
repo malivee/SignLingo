@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct ResultView: View {
+    let predictions: [String]
+    
+    @State private var isBackToCameraView: Bool = false
+    @State private var isBackHome: Bool = false
+    
     var body: some View {
         NavigationStack {
             
@@ -63,7 +68,7 @@ struct ResultView: View {
                         .padding(.top, 40)
                         .padding(.horizontal, 16)
                     
-                    Text("H E L L")
+                    Text(predictions.joined())
                         .font(.largeTitle)
                         .foregroundStyle(.lightPurple)
                         .fontWeight(.black)
@@ -82,17 +87,27 @@ struct ResultView: View {
                         .padding(.top, 40)
                         .padding(.horizontal, 16)
                     
-                    Group {
-                        HorizontalVocabularyView(fillShape: HShapeFill(), outlineShape: HShape(), letter: "H")
-                        HorizontalVocabularyView(fillShape: EShapeFill(), outlineShape: EShape(), letter: "E")
-                        HorizontalVocabularyView(fillShape: LShapeFill(), outlineShape: LShape(), letter: "L")
-                        HorizontalVocabularyView(fillShape: LShapeFill(), outlineShape: LShape(), letter: "L")
+                    //                    Group {
+                    //                        HorizontalVocabularyView(fillShape: HShapeFill(), outlineShape: HShape(), letter: "H")
+                    //                        HorizontalVocabularyView(fillShape: EShapeFill(), outlineShape: EShape(), letter: "E")
+                    //                        HorizontalVocabularyView(fillShape: LShapeFill(), outlineShape: LShape(), letter: "L")
+                    //                        HorizontalVocabularyView(fillShape: LShapeFill(), outlineShape: LShape(), letter: "L")
+                    //                    }
+                    //                    .padding(.horizontal, 16)
+                    //                    .padding(.vertical, 4)
+                    //
+                    VStack {
+                        ForEach(predictions.enumerated(), id: \.offset) {
+                            _, prediction in
+                            HorizontalVocabularyView(fillShape: ShapeFactory.filled(for: prediction), outlineShape: ShapeFactory.outline(for: prediction), letter: prediction)
+                        }
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 4)
                     
+                    
                     Button {
-                        
+                        isBackToCameraView = true
                     } label: {
                         HStack {
                             Image(systemName: "arrow.trianglehead.clockwise")
@@ -110,12 +125,12 @@ struct ResultView: View {
                     
                     
                     Button("Back to Home") {
-                        
+                        isBackHome = true
                     }
                     .font(.title3.bold())
                     .foregroundStyle(.lightPurple)
                     .padding(16)
-
+                    
                     
                 }
                 
@@ -129,6 +144,13 @@ struct ResultView: View {
             }
         }
         .navigationBarBackButtonHidden()
+        .navigationDestination(isPresented: $isBackToCameraView, destination: {
+            CameraFullView()
+                .ignoresSafeArea()
+        })
+        .navigationDestination(isPresented: $isBackHome, destination: {
+            ContentView()
+        })
     }
     
     private func starBall(_ isBackground: Bool) -> some View {
@@ -145,9 +167,9 @@ struct ResultView: View {
         .padding(.top, 32)
         
     }
-        
+    
 }
 
 #Preview {
-    ResultView()
+    ResultView(predictions: ["A", "B", "C"])
 }

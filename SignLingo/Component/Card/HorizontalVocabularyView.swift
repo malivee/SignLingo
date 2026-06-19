@@ -16,7 +16,7 @@ struct HorizontalVocabularyView<FillShape: Shape, OutlineShape: Shape> : View {
         ZStack {
             Rectangle()
                 .fill(.lightPurple.opacity(0.1))
-                .frame(height: 116)
+                .frame(height: 200)
                 .glassEffect(in: .rect(cornerRadius: 16.0))
                 .background(.whitePurple)
                 .clipShape(RoundedRectangle(cornerRadius: 32))
