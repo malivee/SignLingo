@@ -121,7 +121,7 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
 
             guard let observation = request.results?.first else {
                 DispatchQueue.main.async {
-                    self.onPredictionUpdate?("—", 0)
+                    self.onPredictionUpdate?("?", 0)
                     self.onHandPointsUpdate?([:])
                 }
                 return
@@ -137,7 +137,7 @@ final class CameraViewController: UIViewController, AVCaptureVideoDataOutputSamp
 
         } catch {
             DispatchQueue.main.async {
-                self.onPredictionUpdate?("—", 0)
+                self.onPredictionUpdate?("?", 0)
             }
         }
     }
