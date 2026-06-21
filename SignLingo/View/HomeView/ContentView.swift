@@ -66,9 +66,9 @@ struct ContentView: View {
                             .font(.title2.bold())
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundStyle(.lightPurple)
-                        CardTutorialView(title: "Place phone", subtitle: "Lean it against a sturdy object at the eye level", icon: "iphone")
-                        CardTutorialView(title: "Start signing", subtitle: "Keep your hands within the camera's frame.", icon: "hand.raised")
-                        CardTutorialView(title: "View sentence", subtitle: "Watch your signs turn into text instantly!", icon: "text.bubble")
+                        CardTutorialView(title: "Align Hand", subtitle: "Make sure your hand placed in front of the camera", icon: "camera.fill")
+                        CardTutorialView(title: "Start Signing", subtitle: "Start practicing your sign language alphabet", icon: "hand.raised")
+                        CardTutorialView(title: "View The Word", subtitle: "Watch your signs turn into a word instantly!", icon: "text.bubble")
                         
                     }
                     .padding(.bottom, 32)
@@ -114,6 +114,7 @@ struct ContentView: View {
             }
             
         }
+        .navigationBarBackButtonHidden()
         
     }
 }

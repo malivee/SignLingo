@@ -12,7 +12,8 @@ struct CameraFullView: View {
     @State private var prediction: String = "?"
     @State private var confidence: Double = 0.0
     @State private var currentString: [String] = []
-    @State private var isPanelHidden = true
+    @State private var isPanelHidden = false
+    @State private var isShowingDictionary: Bool = false
     @State private var handPoints: [VNHumanHandPoseObservation.JointName: CGPoint] = [:]
     var body: some View {
         NavigationStack {
@@ -24,7 +25,19 @@ struct CameraFullView: View {
                 )
                 .ignoresSafeArea()
                 HandPoseOverlayView(points: handPoints)
-                     .ignoresSafeArea()
+                    .ignoresSafeArea()
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Vocabulary", systemImage: "info.circle") {
+                                isShowingDictionary = !isShowingDictionary
+                            }
+                        
+                            
+                        }
+                    }
+                    .sheet(isPresented: $isShowingDictionary, content: {
+                        DictionaryView()
+                    })
                 
                 VStack {
                     HStack {
@@ -35,19 +48,19 @@ struct CameraFullView: View {
                     .padding(.leading, 16)
                     
                     Spacer()
-                        
+                    
                     if !isPanelHidden {
                         BottomPanel(
                             prediction: prediction,
                             confidence: confidence,
                             currentString: $currentString
                         )
-        
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                        
+                        .transition(.move(edge: .trailing).combined(with: .opacity))
                         .gesture(
                             DragGesture()
                                 .onEnded { value in
-                                    if value.translation.height > 50 {
+                                    if value.translation.width > 30 {
                                         withAnimation(.spring()) {
                                             isPanelHidden = true
                                         }
@@ -55,23 +68,38 @@ struct CameraFullView: View {
                                 }
                         )
                     } else {
-                        Button("Show Panel", systemImage: "chevron.up") {
-                            withAnimation(.spring()) {
-                                isPanelHidden = false
+                        HStack {
+                            Spacer()
+                            Button {
+                                withAnimation(.spring()) {
+                                    isPanelHidden = false
+                                }
+                            } label: {
+                                Label("Show Panel", systemImage: "chevron.left")
+                                    .labelStyle(.iconOnly)
+                                    .foregroundStyle(.lightPurple)
+                                    .frame(width: 35)
+                                    .frame(height: 150)
+                                    .background(.whiteBackground)
                             }
+                            .gesture(
+                                DragGesture()
+                                    .onEnded { value in
+                                        if value.translation.width < -30 {
+                                            withAnimation {
+                                                isPanelHidden = false
+                                            }
+                                        }
+                                    }
+                            )
+                            .transition(.move(edge: .trailing))
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .padding(.bottom, 32)
+                            .offset(y: -50)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
                         }
-                        .labelStyle(.iconOnly)
-                        .foregroundStyle(.lightPurple)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50)
-                        .background(.whiteBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .padding(.horizontal, 160)
-                        // Menggunakan transition agar tombol muncul dengan halus
-                        .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
                 }
-                // Menambahkan satu modifier animasi di container utama untuk semua perubahan layout di dalamnya
                 .animation(.spring(), value: isPanelHidden)
             }
         }
@@ -109,6 +137,7 @@ struct TopSignCard: View {
         }
         .padding(.trailing, 240)
         .padding(.bottom, 150)
+        .offset(y: 80)
     }
 }
 
@@ -168,14 +197,15 @@ struct BottomPanel: View {
                 isGoToNextPage = !isGoToNextPage
             } label: {
                 Label("View Full Word", systemImage: "doc.text")
-                    .foregroundStyle(.darkBrown)
-                    .font(.body.bold())
+                    .foregroundStyle(currentString.isEmpty ? .gray : .darkBrown)
+                    .font(.body)
                     .frame(height: 42)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .padding(.horizontal, 50)
             .tint(.lightOrange)
+            .disabled(currentString.isEmpty)
             
             Button {
                 if prediction != "-" || !prediction.isEmpty || prediction != "?" {
@@ -184,12 +214,13 @@ struct BottomPanel: View {
             } label: {
                 Label("Submit & Next Letter", systemImage: "arrow.right")
                     .font(.callout)
-                    .foregroundStyle(.whiteBackground)
+                    .foregroundStyle(prediction == "-" || prediction == "?" || prediction.isEmpty ?  .gray : .whiteBackground)
                     .frame(maxWidth: .infinity)
                     .frame(height: 46)
             }
             .buttonStyle(.borderedProminent)
             .tint(.lightPurple)
+            .disabled(prediction == "-" || prediction == "?" || prediction.isEmpty)
         }
         .navigationDestination(isPresented: $isGoToNextPage, destination: {
             ResultView(predictions: currentString)
@@ -292,7 +323,8 @@ struct DeleteBox: View {
                 currentString.removeLast()
             }
         }label: {
-            Image(systemName: "delete.left")
+            Label("Delete String", systemImage: "delete.left")
+                .labelStyle(.iconOnly)
                 .font(.system(size: 24))
                 .disabled(currentString.isEmpty || currentString.count == 0)
                 .foregroundStyle(.lightPurple)

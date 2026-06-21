@@ -41,8 +41,10 @@ struct CardTutorialView: View {
                 
                 Text(title)
                     .font(.body.bold())
+                    .multilineTextAlignment(.center)
                 Text(subtitle)
                     .font(.callout.weight(.thin))
+                    .multilineTextAlignment(.center)
                 
                 Spacer()
                 
